@@ -79,8 +79,7 @@ const cwaniaczki = [];
 function kontrola(aktualnyNumerDnia, paszport) {
 
     if(paszport === undefined) return areszt();
-    if (paszport.imie === "Jacek" && paszport.nazwisko === "Jaworek")
-    return areszt();
+    if (paszport.imie === "Jacek" && paszport.nazwisko === "Jaworek") return areszt();
 
     const getKartoteka = kartoteka(paszport.id);
     const bozaSumka = paszport.wygasa * 2137 * paszport.id;
