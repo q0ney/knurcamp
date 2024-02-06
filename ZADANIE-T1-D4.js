@@ -57,8 +57,16 @@
    
     Pisz kod tylko pomiędzy MIEJSCE NA TWÓJ KOD i KONIEC MIEJSCA NA TWÓJ KOD.
 */
-const POZIOM_TRUDNOSCI = 1; // 1 albo 2 albo 3
+const POZIOM_TRUDNOSCI = 3; // 1 albo 2 albo 3
 
+const NIEWSPIERAM = ['BOŚNIA', 'ROSJA', 'WATYKAN']
+
+const check = (kraj) => {
+  return NIEWSPIERAM.includes(kraj)
+}
+
+
+const cwaniaczki = [];
 
 
 /**
@@ -68,20 +76,31 @@ const POZIOM_TRUDNOSCI = 1; // 1 albo 2 albo 3
  * @returns {boolean} wynik kontroli
  */
 
-const NIEWSPIERAM = ['BOŚNIA', 'ROSJA', 'WATYKAN']
-
-
-function sprawdz(kraj){
-  let check = NIEWSPIERAM.includes(kraj)
-  return check
-}
-
 function kontrola(aktualnyNumerDnia, paszport) {
 
+    if(paszport === undefined) return areszt();
+    if (paszport.imie === "Jacek" && paszport.nazwisko === "Jaworek")
+    return areszt();
 
-    if(paszport.wiek < 18 || sprawdz(paszport.narodowosc) || paszport.wygasa <= aktualnyNumerDnia){
+    const getKartoteka = kartoteka(paszport.id);
+    const bozaSumka = paszport.wygasa * 2137 * paszport.id;
+    const cwaniakCheck = cwaniaczki.some(c => c.dzien === aktualnyNumerDnia && c.id === paszport.id) //dziala ale mieli w chuj
+
+    if (cwaniakCheck || getKartoteka === undefined){
+      return areszt();
+    }
+
+    for(const key in getKartoteka){
+      if(getKartoteka[key] != paszport[key]) return areszt();
+    }
+
+    if(paszport.sumaKontrolna !== bozaSumka) return areszt();
+    
+    if(paszport.wiek < 18 || check(paszport.narodowosc) || paszport.wygasa <= aktualnyNumerDnia){
       return false;
     }
+
+    cwaniaczki.push({dzien: aktualnyNumerDnia, id: paszport.id})
 
     return true; // true = przepuszczamy petenta - false = nieprzepuszczamy - areszt() = aresztujemy typa
 }
