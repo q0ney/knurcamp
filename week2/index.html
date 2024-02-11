@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>knurcamp</title>
+    <style>
+      body {
+        background-color: #1c1c1c;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        color: white;
+      }
+    </style>
+  </head>
+  <body>
+    <button id="Baton" style="margin-bottom: 1rem;">dodaj divika</button>
+    <div id="temp"></div>
+  </body>
+  <script>
+    const funkszyn = () => {
+    const cialko = document.body;
+    const twurzObraz = document.createElement('img');
+    twurzObraz.setAttribute('id', 'obrazek')
+    twurzObraz.src = 'https://media.tenor.com/jKiDVKv0UzsAAAAM/papiesz.gif';
+
+    cialko.appendChild(twurzObraz);
+    const obrazek = document.getElementById("obrazek")
+
+    const obrazeczkiLinki = [
+      'https://media.tenor.com/jKiDVKv0UzsAAAAM/papiesz.gif',
+      'https://i.makeagif.com/media/3-25-2017/gbKYlJ.gif',
+      'https://i.makeagif.com/media/8-03-2016/seZnDg.gif',
+      'https://i.makeagif.com/media/2-12-2017/OZ5nrH.gif'
+    ]
+    let i = 0;
+
+    const zmianaPapiesza = () => {
+      if(i > 3){
+        i = 0
+        obrazek.src = obrazeczkiLinki[0];
+      }
+        obrazek.src = obrazeczkiLinki[i];
+        i++
+    }
+    setInterval(zmianaPapiesza, 1000)
+
+    const baton = document.getElementById('Baton');
+    let kolejnyNumer = 1
+
+    function funkszynDodaj(){
+      const tworzDiv = document.createElement('div');
+      tworzDiv.textContent = kolejnyNumer;
+      cialko.insertBefore(tworzDiv, baton);
+      kolejnyNumer++;
+    }
+
+    baton.addEventListener('click', funkszynDodaj);
+
+    function nieFecz() {
+      const xhttp = new XMLHttpRequest();
+
+    xhttp.open("GET", "https://api.open-meteo.com/v1/forecast?latitude=31.7619&longitude=106.4850&current=temperature_2m,wind_speed_10m&hourly=temperature_2m,relative_humidity_2m,wind_speed_10m", true);
+    xhttp.send(); 
+    xhttp.onload = () => {
+      let pogoda = JSON.parse(xhttp.responseText);
+      console.log(pogoda)
+      let tempDiv = document.getElementById('temp')
+      tempDiv.innerHTML = 'Temperatura: ' + pogoda.current.temperature_2m + pogoda.current_units.temperature_2m
+      
+    }
+
+
+
+    }
+    
+    addEventListener('load', nieFecz)
+    }
+    
+
+    addEventListener('DOMContentLoaded', funkszyn())
+
+  </script>
+</html>
